@@ -124,10 +124,14 @@ public class Fenetre extends JFrame implements ActionListener, WindowListener {
 			afficher(maConnexionBD.actionBouton("d"));
 
 		 if (e.getSource() == btRecherche)
-			 System.out.println("rechercher");
+		 {
+			System.out.println("rechercher");
+		 	String ageEcrit = txtAgeMinimum.getText();
+		 	afficher(maConnexionBD.rechercheAgeMin(ageEcrit));
+		 }
 		 	
 		 if (e.getSource() == btTous)
-		 System.out.println("tous");
+			 System.out.println("tous");
 
 		// if (e.getSource() == btVider)
 		// System.out.println("vider");
@@ -163,17 +167,16 @@ public class Fenetre extends JFrame implements ActionListener, WindowListener {
 	
 	private void afficher(Personne p)
 	{
+		String age, prenom, nom;
+		
+		age = (p.getAge() < 0)?"Age Inconnu":(String.valueOf(p.getAge()));
+		nom = p.getNom();
+		prenom = p.getPrenom();
+		
 		txtNum.setText(p.getNum());
-		txtNom.setText(p.getNom());
-		txtPrenom.setText(p.getPrenom());
-		if(p.getAge() < 0)
-		{
-			txtAge.setText("Inconnu");
-		}
-		else
-		{
-			txtAge.setText(String.valueOf(p.getAge()));
-		}
+		txtNom.setText(nom);
+		txtPrenom.setText(prenom);
+		txtAge.setText(age);
 	}
 
 	public static void main(String[] args) {

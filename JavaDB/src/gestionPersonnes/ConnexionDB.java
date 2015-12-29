@@ -6,9 +6,9 @@ import gestionPersonnes.Personne;
 public class ConnexionDB {
 	
 	private Statement st;
-	private ResultSet rs;
+	private ResultSet rs,rs2;
 	private Connection cn;
-	private PreparedStatement ps;
+	private PreparedStatement pst;
 	
 	private String num = null, nom = null, prenom = null;
 	private int age = -1;
@@ -18,14 +18,14 @@ public class ConnexionDB {
 		try
 		{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@gloin:1521:iut";
+			String url = "jdbc:oracle:thin:@162.38.222.149:1521:iut";
 			String login = "ronsinl";
 			String mdp = "123";
 			cn = DriverManager.getConnection(url, login, mdp);
-			st = cn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			st = cn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = st.executeQuery("SELECT * FROM Personnes ORDER BY agePersonne DESC NULLS LAST");
 			
-			ps = cn.prepareStatement("SELECT * FROM Personnes WHERE agePersonne > ? ORDER BY agePersonne DESC NULLS LAST");
+			pst = cn.prepareStatement("SELECT * FROM Personnes WHERE agePersonne >= ? ORDER BY agePersonne DESC");
 		}
 		catch (SQLException e) 
 		{
@@ -39,6 +39,42 @@ public class ConnexionDB {
 		}
 	}
 	
+	public static boolean isParsable(String input){
+	    boolean parsable = true;
+	    try{
+	        Integer.parseInt(input);
+	    }catch(NumberFormatException e){
+	        parsable = false;
+	    }
+	    return parsable;
+	}
+	
+	public Personne rechercheAgeMin(String ageChoisi)
+	{
+		int ageRecheche = -1;
+		if(isParsable(ageChoisi))
+			ageRecheche = Integer.parseInt(ageChoisi);
+		if(ageRecheche >= 0)
+		{
+			try {
+				pst.setInt(1, ageRecheche);
+				rs = pst.executeQuery();
+				rs.next();
+				
+				num = rs.getString(1);
+				nom =  rs.getString(2);
+				prenom = rs.getString(3);
+				age = rs.getInt(4);
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		Personne result = new Personne(num, nom, prenom, age);
+		
+		return result;
+	}
+	
 	public Personne actionBouton(String performedButton)
 	{
 		try 
@@ -47,30 +83,22 @@ public class ConnexionDB {
 			{
 			case "p" :
 				rs.first();
-			break;
+				break;
 			case "d" :
 				rs.last();
-			break;
+				break;
 			case "s" :
-				if(rs.isLast())
-				{
-					rs.last();
-				}
-				else
+				if(!rs.isLast())
 				{
 					rs.next();
-				}
-			break;
+				}								
+				break;
 			case "b" :
-				if(rs.isFirst())
-				{
-					rs.first();
-				}
-				else
+				if(!rs.isFirst())
 				{
 					rs.previous();
 				}
-			break;
+				break;
 			default:
 				rs.first();
 				break;
@@ -80,9 +108,7 @@ public class ConnexionDB {
 			prenom = rs.getString(3);
 			age = rs.getInt(4);
 			if(rs.wasNull())
-			{
 				age = -1;
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
