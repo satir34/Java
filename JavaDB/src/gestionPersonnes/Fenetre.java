@@ -92,7 +92,7 @@ public class Fenetre extends JFrame implements ActionListener, WindowListener {
 
 		contentPane.add(panRecherche,"North");
 		contentPane.add(panAffichage);
-		// contentPane.add(panModification,"South");
+		contentPane.add(panModification,"South");
 		pack();
 
 		btPrem.addActionListener(this);
@@ -125,22 +125,33 @@ public class Fenetre extends JFrame implements ActionListener, WindowListener {
 
 		 if (e.getSource() == btRecherche)
 		 {
-			System.out.println("rechercher");
 		 	String ageEcrit = txtAgeMinimum.getText();
 		 	afficher(maConnexionBD.rechercheAgeMin(ageEcrit));
 		 }
 		 	
 		 if (e.getSource() == btTous)
+		 {
 			 System.out.println("tous");
+			 afficher(maConnexionBD.tous());
+		 }
 
-		// if (e.getSource() == btVider)
-		// System.out.println("vider");
-		// if (e.getSource() == btEnregistrer)
-		// System.out.println("enregistrer");
-		// if (e.getSource() == btModifier)
-		// System.out.println("modifier");
-		// if (e.getSource() == btSupprimer)
-		// System.out.println("supprimer");
+		if (e.getSource() == btVider)
+		{
+			txtNum.setText("");
+			txtNom.setText("");
+			txtPrenom.setText("");
+			txtAge.setText("");
+		}
+		
+		if (e.getSource() == btEnregistrer)
+			System.out.println("enregistrer");
+		if (e.getSource() == btModifier)
+			System.out.println("modifier");
+		if (e.getSource() == btSupprimer)
+		{
+			System.out.println("supprimer");
+			maConnexionBD.delete();
+		}
 	}
 
 	public void windowClosing(WindowEvent arg0) {

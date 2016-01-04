@@ -2,11 +2,12 @@ package gestionPersonnes;
 import java.sql.*;
 
 import gestionPersonnes.Personne;
+import jdk.nashorn.internal.ir.GetSplitState;
 
 public class ConnexionDB {
 	
 	private Statement st;
-	private ResultSet rs,rs2;
+	private ResultSet rs;
 	private Connection cn;
 	private PreparedStatement pst;
 	
@@ -24,8 +25,7 @@ public class ConnexionDB {
 			cn = DriverManager.getConnection(url, login, mdp);
 			st = cn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = st.executeQuery("SELECT * FROM Personnes ORDER BY agePersonne DESC NULLS LAST");
-			
-			pst = cn.prepareStatement("SELECT * FROM Personnes WHERE agePersonne >= ? ORDER BY agePersonne DESC");
+			pst = cn.prepareStatement("SELECT * FROM Personnes WHERE agePersonne >= ? ORDER BY agePersonne DESC", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		catch (SQLException e) 
 		{
@@ -49,15 +49,28 @@ public class ConnexionDB {
 	    return parsable;
 	}
 	
+	public void delete()
+	{
+		try {
+			if(rs.next())
+			{
+				rs.deleteRow();
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	
 	public Personne rechercheAgeMin(String ageChoisi)
 	{
-		int ageRecheche = -1;
+		int ageRecherche = -1;
 		if(isParsable(ageChoisi))
-			ageRecheche = Integer.parseInt(ageChoisi);
-		if(ageRecheche >= 0)
+			ageRecherche = Integer.parseInt(ageChoisi);
+		if(ageRecherche >= 0)
 		{
 			try {
-				pst.setInt(1, ageRecheche);
+				pst.setInt(1, ageRecherche);
 				rs = pst.executeQuery();
 				rs.next();
 				
@@ -67,8 +80,26 @@ public class ConnexionDB {
 				age = rs.getInt(4);
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
-				e.printStackTrace();
 			}
+		}
+		Personne result = new Personne(num, nom, prenom, age);
+		
+		return result;
+	}
+	
+	public Personne tous()
+	{
+		try {
+			
+			rs = st.executeQuery("SELECT * FROM Personnes ORDER BY agePersonne DESC NULLS LAST");
+			rs.first();
+			
+			num = rs.getString(1);
+			nom =  rs.getString(2);
+			prenom = rs.getString(3);
+			age = rs.getInt(4);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
 		Personne result = new Personne(num, nom, prenom, age);
 		
