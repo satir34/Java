@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/git/Java/JavaDB/Librairies/classes111.jar"/>
-	<classpathentry kind="lib" path="C:/git/Java/JavaDB/Librairies/mysql-connector-java-5.1.5-bin.jar"/>
-	<classpathentry kind="lib" path="C:/git/Java/JavaDB/Librairies/ojdbc6.jar"/>
-	<classpathentry kind="lib" path="C:/git/Java/JavaDB/Librairies/sqlite-jdbc-3.5.7.jar"/>
+	<classpathentry kind="lib" path="Z:/git/Java/JavaDB/Librairies/classes111.jar"/>
+	<classpathentry kind="lib" path="Z:/git/Java/JavaDB/Librairies/mysql-connector-java-5.1.5-bin.jar"/>
+	<classpathentry kind="lib" path="Z:/git/Java/JavaDB/Librairies/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="Z:/git/Java/JavaDB/Librairies/sqlite-jdbc-3.5.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

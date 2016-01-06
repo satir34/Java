@@ -24,8 +24,8 @@ public class ConnexionDB {
 			String mdp = "123";
 			cn = DriverManager.getConnection(url, login, mdp);
 			st = cn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			rs = st.executeQuery("SELECT * FROM Personnes ORDER BY agePersonne DESC NULLS LAST");
-			pst = cn.prepareStatement("SELECT * FROM Personnes WHERE agePersonne >= ? ORDER BY agePersonne DESC", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			rs = st.executeQuery("SELECT p.* FROM Personnes p ORDER BY p.agePersonne DESC NULLS LAST");
+			pst = cn.prepareStatement("SELECT p.* FROM Personnes WHERE p.agePersonne >= ? ORDER BY p.agePersonne DESC", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		catch (SQLException e) 
 		{
@@ -52,10 +52,7 @@ public class ConnexionDB {
 	public void delete()
 	{
 		try {
-			if(rs.next())
-			{
-				rs.deleteRow();
-			}
+			rs.deleteRow();
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
@@ -91,7 +88,7 @@ public class ConnexionDB {
 	{
 		try {
 			
-			rs = st.executeQuery("SELECT * FROM Personnes ORDER BY agePersonne DESC NULLS LAST");
+			rs = st.executeQuery("SELECT p.* FROM Personnes p ORDER BY p.agePersonne DESC NULLS LAST");
 			rs.first();
 			
 			num = rs.getString(1);
